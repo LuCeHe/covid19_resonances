@@ -24,9 +24,11 @@ and [here](https://github.com/analysiscenter/pydens).
 - [x] protein to springs, spring constants and atom masses, using Aisotropic Network Models: [here](https://pymolwiki.org/index.php/PyANM) and [here](http://prody.csb.pitt.edu/)
 - [x] small toy dynamical system to use before I manage to optimize the code for very high dimensional dynamical systems needed for proteins
 - [x] approximate dynamical system without x-rays
-- [ ] model X-ray influence to the charge
-- [ ] automatically download the .pdb
+- [x] automatically download the .pdb
+- [ ] successfully train a DL to approximate the system of equations without X-Ray model
 - [ ] define a metric of maximal disruption: the incident wave would be maximally disruptive if it maximizes the variance around the equilibrium position
+- [ ] model X-ray influence to the charge
+- [ ] search for the frequency of the X-Ray that maximally disrupts the system
 
 ## How to Use it
 1. create a `data` folder and a `cristal_structure` folder inside
