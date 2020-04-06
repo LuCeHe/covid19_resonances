@@ -21,14 +21,9 @@ and [here](https://github.com/analysiscenter/pydens).
 - [x] make it a system of springs
 - [x] 3d drawing
 - [x] pdb to pqr for [charge visualization](https://www.youtube.com/watch?v=DP4yk0_A828)
-- [x]  protein to springs
-    - # https://pymolwiki.org/index.php/PyANM
-    - # http://prody.csb.pitt.edu/
-    - # [DONE] strength springs
-    - # [DONE] masses of atoms
-  - # [DONE] small dynamical system
-  - # [DONE] approximate dynamical system without x-rays
-  - # [DONE] save data
-  - # [DONE] plot data
-  - # [DONE] assign 3d position to your toy data and make a gif
-  - # [DONE] same for protein
+- [x] protein to springs, spring constants and atom masses, using ANMs: [here](https://pymolwiki.org/index.php/PyANM) and [here](http://prody.csb.pitt.edu/)
+- [x] small toy dynamical system to use before I manage to optimize the code for very high dimensional dynamical systems needed for proteins
+- [x] approximate dynamical system without x-rays
+- [ ] model X-ray influence to the charge
+- [ ] automatically download the .pdb
+- [ ] define a metric of maximal disruption: the incident wave would be maximally disruptive if it maximizes the variance around the equilibrium position
