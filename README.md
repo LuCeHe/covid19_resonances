@@ -27,7 +27,7 @@ and [here](https://github.com/analysiscenter/pydens).
 - [x] automatically download the .pdb
 - [ ] successfully train a DL to approximate the system of equations without X-Ray model
 - [ ] define a metric of maximal disruption: the incident wave would be maximally disruptive if it maximizes the variance around the equilibrium position
-- [ ] model X-ray influence to the charge
+- [ ] model X-ray influence to the charge. The charge of each atom in the protein can be obtained by turning the .pdb into .pqr
 - [ ] search for the frequency of the X-Ray that maximally disrupts the system
 
 ## How to Use it
