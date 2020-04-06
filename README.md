@@ -21,7 +21,7 @@ and [here](https://github.com/analysiscenter/pydens).
 - [x] make it a system of springs
 - [x] 3d drawing
 - [x] pdb to pqr for [charge visualization](https://www.youtube.com/watch?v=DP4yk0_A828)
-- [x] protein to springs, spring constants and atom masses, using ANMs: [here](https://pymolwiki.org/index.php/PyANM) and [here](http://prody.csb.pitt.edu/)
+- [x] protein to springs, spring constants and atom masses, using Aisotropic Network Models: [here](https://pymolwiki.org/index.php/PyANM) and [here](http://prody.csb.pitt.edu/)
 - [x] small toy dynamical system to use before I manage to optimize the code for very high dimensional dynamical systems needed for proteins
 - [x] approximate dynamical system without x-rays
 - [ ] model X-ray influence to the charge
