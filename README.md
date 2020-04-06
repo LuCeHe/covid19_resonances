@@ -27,3 +27,9 @@ and [here](https://github.com/analysiscenter/pydens).
 - [ ] model X-ray influence to the charge
 - [ ] automatically download the .pdb
 - [ ] define a metric of maximal disruption: the incident wave would be maximally disruptive if it maximizes the variance around the equilibrium position
+
+## How to Use it
+1. create a `data` folder and a `cristal_structure` folder inside
+2. run `get_data.py` to download a covid19 protein in that folder
+3. run `naive_ode_integration.py` for `pdb_name = 'toy'` to have an impression of the final result for a random network. This code will be prohibitively slow to try with a true `pdb_name = 'toy'`
+4. run `tf_ode_approximation` to approximate the dynamical system with DL. Under construction.
