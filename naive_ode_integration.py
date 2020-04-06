@@ -23,7 +23,7 @@ ex = CustomExperiment('guinea_cleaner_CPC', base_dir=CDIR, GPU=1)
 
 @ex.config
 def cfg():
-    pdb_name = 'toy'  # '6lu7'  #
+    pdb_name = 'toy'  # '6lu7'  # '6M03'
     stoptime = 20
     numpoints = 200
     print_every = int(numpoints / 20)
