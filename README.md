@@ -6,7 +6,7 @@ other proteins), and from there one can extract the springs that model the inter
 to which freq in the X-ray range it moves the most, maybe it's not necessary to have a resonance, and just an excitation 
 that is high enough to deform the protein in such a way that it stops being functional. What is convenient of X-rays is 
 that (1) hospitals have already the machines, and (2) the body is mostly transparent to it, apart from bones, so you can 
-access all of its interior from the exterior.
+access all of its interior from the exterior. Similar reasoning would go for ultrasound in the 10-100 MHz
 
 1. Dumb me thought scipy.integrate.odeint would be good enough, but it is extremely slow for a system of 7500 
 eqs (the spike has 2500 atoms, each with 3 space coords). I'm planning to use this DL to approximate the system dynamic
