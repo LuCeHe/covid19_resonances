@@ -34,7 +34,7 @@ def getData(pdb_name='toy'):
         # 20 n_atoms -> 10s / 10s
         # 40 n_atoms -> 34s / 35s
         # 60 n_atoms -> 112s
-        n_atoms = 1
+        n_atoms = 4
         y_0 = np.concatenate(
             [np.zeros(3 * n_atoms), np.random.rand(3 * n_atoms)])  # initial velocities followed by initial positions
         y_0 = np.concatenate(
