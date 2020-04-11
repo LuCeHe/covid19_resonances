@@ -25,7 +25,6 @@ def get_content_data(data_path):
     files = os.listdir(data_path)
     print(files)
 
-
 def getData(pdb_name='toy'):
     # the reference frame is from the equilibrium position, so y_eq = 0
 
@@ -44,6 +43,9 @@ def getData(pdb_name='toy'):
         # friction = np.zeros(n_atoms)
         k = np.random.rand(3 * n_atoms, 3 * n_atoms)
         masses = np.random.rand(3 * n_atoms)
+        amplitude = np.array([1, 2, 2])
+        amplitude = np.repeat(amplitude[:, np.newaxis], n_atoms, axis=1).T.flatten()
+        charges = np.random.rand(3 * n_atoms)
     else:
         data_path = r'data/deepmind_prediction'
         data_path = r'data/cristal_structure'
@@ -69,4 +71,4 @@ def getData(pdb_name='toy'):
         y_0 = np.concatenate(
             [np.zeros(3 * n_atoms), np.random.rand(3 * n_atoms)])  # initial velocities followed by initial positions
 
-    return y_0, y_eq, masses, friction, k
+    return y_0, y_eq, masses, friction, k, amplitude, charges
