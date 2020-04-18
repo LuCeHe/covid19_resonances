@@ -28,19 +28,19 @@ def get_content_data(data_path):
 def getData(pdb_name='toy'):
     # the reference frame is from the equilibrium position, so y_eq = 0
 
-    if pdb_name == 'toy':
+    if 'toy' in pdb_name:
         # be careful, odeint seems to scale quadratically with n_atoms:
         # 20 n_atoms -> 10s / 10s
         # 40 n_atoms -> 34s / 35s
         # 60 n_atoms -> 112s
-        n_atoms = 4
+        n_atoms = int(pdb_name.replace('toy', ''))
         y_0 = np.concatenate(
             [np.zeros(3 * n_atoms), np.random.rand(3 * n_atoms)])  # initial velocities followed by initial positions
         y_0 = np.concatenate(
             [np.zeros(3 * n_atoms), np.zeros(3 * n_atoms)])  # initial velocities followed by initial positions
         y_eq = np.random.rand(3 * n_atoms)
-        friction = np.random.rand(3 * n_atoms)
-        # friction = np.zeros(n_atoms)
+        #friction = np.random.rand(3 * n_atoms)
+        friction = np.zeros(3*n_atoms)
         k = np.random.rand(3 * n_atoms, 3 * n_atoms)
         masses = np.random.rand(3 * n_atoms)
         amplitude = np.array([1, 2, 2])

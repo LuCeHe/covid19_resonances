@@ -31,8 +31,9 @@ def positions2gif(positions, timesteps, print_every=1, gifpath='movie.gif'):
     max_pos = np.max(positions)
     min_pos = np.min(positions)
 
-
     giffolderpath = 'gif'
+    if os.path.isdir(giffolderpath):
+        shutil.rmtree(giffolderpath, ignore_errors=True)
     os.mkdir(giffolderpath)
 
     filenames = []
