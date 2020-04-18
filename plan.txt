@@ -1,0 +1,10 @@
+# immediate future
+
+- get the whole pipeline working for small random spring nets
+- get the whole pipeline working for a true covid19 protein
+
+
+# far future possibilities
+
+- find the most disruptive waveform
+- find if there is maximally disruptive movement of polarization

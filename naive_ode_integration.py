@@ -13,12 +13,12 @@ from pylab import *
 from scipy.integrate import odeint
 
 from GenericTools.SacredTools.VeryCustomSacred import CustomExperiment
-from covid19_resonances.convenience_tools.dynamics import dynamical_protein
-from covid19_resonances.convenience_tools.preprocessing import getData
-from covid19_resonances.visualization.visualization import positions2gif
+from covid19_resonances.preprocessing.dynamics import dynamical_protein
+from covid19_resonances.preprocessing.preprocessing import getData
+from covid19_resonances.postprocessing.visualization import positions2gif
 
 CDIR = os.path.dirname(os.path.realpath(__file__))
-ex = CustomExperiment('guinea_cleaner_CPC', base_dir=CDIR, GPU=1)
+ex = CustomExperiment(' covid19 resonances ', base_dir=CDIR, GPU=1)
 
 
 @ex.config

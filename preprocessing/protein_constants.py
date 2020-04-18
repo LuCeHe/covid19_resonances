@@ -25,7 +25,7 @@ def get_content_data(data_path):
     files = os.listdir(data_path)
     print(files)
 
-def getData(pdb_name='toy'):
+def getProteinConstants(pdb_name='toy'):
     # the reference frame is from the equilibrium position, so y_eq = 0
 
     if 'toy' in pdb_name:

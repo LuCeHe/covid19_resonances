@@ -13,7 +13,7 @@ from GenericTools.SacredTools.VeryCustomSacred import CustomExperiment
 
 tf.logging.set_verbosity(tf.logging.FATAL)  # or any {DEBUG, INFO, WARN, ERROR, FATAL}
 
-from covid19_resonances.convenience_tools.preprocessing import getData
+from covid19_resonances.preprocessing.preprocessing import getData
 
 CDIR = os.path.dirname(os.path.realpath(__file__))
 ex = CustomExperiment('tf covid19 resonances', base_dir=CDIR, GPU=1)
