@@ -14,7 +14,7 @@ from scipy.integrate import odeint
 
 from GenericTools.SacredTools.VeryCustomSacred import CustomExperiment
 from covid19_resonances.preprocessing.dynamics import dynamical_protein
-from covid19_resonances.preprocessing.preprocessing import getData
+from covid19_resonances.preprocessing.protein_constants import getProteinConstants
 from covid19_resonances.postprocessing.visualization import positions2gif
 
 CDIR = os.path.dirname(os.path.realpath(__file__))
@@ -25,7 +25,7 @@ ex = CustomExperiment(' covid19 resonances ', base_dir=CDIR, GPU=1)
 def cfg():
     pdb_name = 'toy5'  # '6lu7'  # '6M03'
     stoptime = 20
-    temporal_resolution = 20  # 200
+    temporal_resolution = 200  # 200
     print_every = int(temporal_resolution / 20)
     freq_beam = 20
     dir_beam = np.random.rand(3)
@@ -38,7 +38,7 @@ def main(pdb_name, stoptime, temporal_resolution, print_every, dir_beam, freq_be
     files_dir = os.path.join(*[CDIR, ex.observers[0].basedir, 'other_outputs'])
 
     _log.warn('Getting the Data...')
-    y_0, y_eq, masses, friction, k, amplitude, charges = getData(pdb_name=pdb_name)
+    y_0, y_eq, masses, friction, k, amplitude, charges = getProteinConstants(pdb_name=pdb_name)
     protein_constants = {'y_0': y_0, 'y_eq': y_eq, 'masses': masses, 'friction': friction, 'k': k,
                          'amplitude': amplitude, 'charges': charges}
     np.save(files_dir + r'/protein_constants', protein_constants)

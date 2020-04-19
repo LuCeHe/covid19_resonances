@@ -11,8 +11,8 @@ import numpy as np
 
 CDIR = os.path.dirname(os.path.realpath(__file__))
 
-initial_time_string = 'experiment-2020-04-18-at-11-14-14'
-final_time_string = 'experiment-2020-04-18-at-11-16-46'
+initial_time_string = 'experiment-2020-04-18-at-22-03-14'
+final_time_string = 'experiment-2020-04-18-at-22-16-46'
 
 
 
