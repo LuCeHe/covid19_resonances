@@ -1,14 +1,16 @@
 import numpy as np
 from numba import jit
 
-def dynamical_protein(y, t, k, masses, friction, y_eq, charges, amplitude, dir_beam, freq_beam):
+def dynamical_protein(y, t, k, masses, friction, y_eq, charges, amplitude_1, amplitude_2, dir_beam, freq_beam_1, freq_beam_2):
     x_prime, x = np.split(np.array(y), 2)
 
     # xray
     positions = x + y_eq
     a = np.transpose(np.repeat(positions[:, np.newaxis], 3, axis=1), [1, 0])
-    xrays_beam = charges * amplitude * np.sin(np.sum(dir_beam * a.T, axis=1) + freq_beam * t)
+    xrays_beam_1 = charges * amplitude_1 * np.sin(np.sum(dir_beam * a.T, axis=1) + freq_beam_1 * t)
+    xrays_beam_2 = charges * amplitude_2 * np.sin(np.sum(dir_beam * a.T, axis=1) + freq_beam_2 * t + np.pi/2)
 
+    xrays_beam = xrays_beam_1 + xrays_beam_2
     # net of springs
     first_derivative = x_prime
     x_repeated = np.repeat(x[:, np.newaxis], len(x), axis=1)

@@ -34,6 +34,8 @@ def getProteinConstants(pdb_name='toy'):
         # 40 n_atoms -> 34s / 35s
         # 60 n_atoms -> 112s
         n_atoms = int(pdb_name.replace('toy', ''))
+
+        print(n_atoms)
         y_0 = np.concatenate(
             [np.zeros(3 * n_atoms), np.random.rand(3 * n_atoms)])  # initial velocities followed by initial positions
         y_0 = np.concatenate(
@@ -43,8 +45,6 @@ def getProteinConstants(pdb_name='toy'):
         friction = np.zeros(3*n_atoms)
         k = np.random.rand(3 * n_atoms, 3 * n_atoms)
         masses = np.random.rand(3 * n_atoms)
-        amplitude = np.array([1, 2, 2])
-        amplitude = np.repeat(amplitude[:, np.newaxis], n_atoms, axis=1).T.flatten()
         charges = np.random.rand(3 * n_atoms)
     else:
         data_path = r'data/deepmind_prediction'
@@ -71,4 +71,4 @@ def getProteinConstants(pdb_name='toy'):
         y_0 = np.concatenate(
             [np.zeros(3 * n_atoms), np.random.rand(3 * n_atoms)])  # initial velocities followed by initial positions
 
-    return y_0, y_eq, masses, friction, k, amplitude, charges
+    return y_0, y_eq, masses, friction, k, charges

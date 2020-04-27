@@ -18,42 +18,61 @@ from covid19_resonances.preprocessing.protein_constants import getProteinConstan
 from covid19_resonances.postprocessing.visualization import positions2gif
 
 CDIR = os.path.dirname(os.path.realpath(__file__))
-ex = CustomExperiment(' covid19 resonances ', base_dir=CDIR, GPU=1)
+ex = CustomExperiment('noi', base_dir=CDIR, GPU=1)
 
 
 @ex.config
 def cfg():
-    pdb_name = 'toy5'  # '6lu7'  # '6M03'
+    n_atoms = np.random.choice(range(3, 8))
+    pdb_name = 'toy{}'.format(n_atoms)  # '6lu7'  # '6M03'
     stoptime = 20
-    temporal_resolution = 200  # 200
+    temporal_resolution = 2000  # 200
     print_every = int(temporal_resolution / 20)
-    freq_beam = 20
+
+    # beam properties
+    freq_beam_1 = 2000 * np.random.rand()
+    freq_beam_2 = 2000 * np.random.rand()
+    freq_beam_2 = np.random.choice([freq_beam_2, freq_beam_1])
+
     dir_beam = np.random.rand(3)
+    amplitude_1 = np.array([1, 2, 2])
+    amplitude_2 = np.cross(dir_beam, amplitude_1)
+    amplitude_2 = amplitude_2 / np.linalg.norm(amplitude_2) * np.linalg.norm(amplitude_1) * .2
+
+    amplitude_1 = np.repeat(amplitude_1[:, np.newaxis], n_atoms, axis=1).T.flatten()
+    amplitude_2 = np.repeat(amplitude_2[:, np.newaxis], n_atoms, axis=1).T.flatten()
+    amplitude_2 = np.random.choice([0, amplitude_1, amplitude_2])
+
+    seed = np.random.choice(2000)
 
 
 @ex.automain
-def main(pdb_name, stoptime, temporal_resolution, print_every, dir_beam, freq_beam, _log):
+def main(pdb_name, stoptime, temporal_resolution, print_every, dir_beam, freq_beam_1, freq_beam_2, amplitude_1,
+         amplitude_2, _log):
     sacred_dir = os.path.join(*[CDIR, ex.observers[0].basedir])
     images_dir = os.path.join(*[CDIR, ex.observers[0].basedir, 'images'])
     files_dir = os.path.join(*[CDIR, ex.observers[0].basedir, 'other_outputs'])
 
     _log.warn('Getting the Data...')
-    y_0, y_eq, masses, friction, k, amplitude, charges = getProteinConstants(pdb_name=pdb_name)
+    y_0, y_eq, masses, friction, k, charges = getProteinConstants(pdb_name=pdb_name)
     protein_constants = {'y_0': y_0, 'y_eq': y_eq, 'masses': masses, 'friction': friction, 'k': k,
-                         'amplitude': amplitude, 'charges': charges}
+                         'charges': charges}
+    beam_constants = {'dir_beam': dir_beam, 'freq_beam_1': freq_beam_1, 'freq_beam_2': freq_beam_2,
+                      'amplitude_1': amplitude_1[:3], 'amplitude_2': amplitude_2[:3]}
     np.save(files_dir + r'/protein_constants', protein_constants)
+    np.save(files_dir + r'/beam_constants', beam_constants)
 
     _log.warn('Solving the Dynamical Equations...')
     t = [stoptime * float(i) / (temporal_resolution - 1) for i in range(temporal_resolution)]
     moving_dots = odeint(dynamical_protein, y_0, t,
-                         args=(k, masses, friction, y_eq, charges, amplitude, dir_beam, freq_beam))
+                         args=(k, masses, friction, y_eq, charges, amplitude_1, amplitude_2, dir_beam, freq_beam_1, freq_beam_2))
     np.save(files_dir + r'/dynamics', moving_dots)
 
     _log.warn('Plotting...')
     speeds, positions = np.split(moving_dots, 2, axis=1)
-    max_disruption = np.mean(np.std(positions, axis=0))
+    max_disruption = np.max(np.std(positions, axis=1))  # np.mean(np.std(positions, axis=0))
     plt.plot(t, positions.round(3))
-    plt.savefig(images_dir + r'/two_springs.png', dpi=100)
+    plt.savefig(images_dir + r'/two_springs_{}.png'.format(max_disruption.round(3)), dpi=100)
     positions = positions + y_eq
     gifpath = images_dir + r'/movie_md_{}.gif'.format(max_disruption.round(3))
     positions2gif(positions=positions,
