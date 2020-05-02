@@ -7,8 +7,8 @@ files are PDB files where the occupancy and B-factor columns have
 been replaced by per-atom charge and radius.
 2. get the expected springs
 """
-
 import os
+import psutil
 from pylab import *
 from scipy.integrate import odeint
 
@@ -49,6 +49,9 @@ def cfg():
 @ex.automain
 def main(pdb_name, stoptime, temporal_resolution, print_every, dir_beam, freq_beam_1, freq_beam_2, amplitude_1,
          amplitude_2, _log):
+    process = psutil.Process()
+    print(process.memory_info().vms)
+
     sacred_dir = os.path.join(*[CDIR, ex.observers[0].basedir])
     images_dir = os.path.join(*[CDIR, ex.observers[0].basedir, 'images'])
     files_dir = os.path.join(*[CDIR, ex.observers[0].basedir, 'other_outputs'])
@@ -79,5 +82,8 @@ def main(pdb_name, stoptime, temporal_resolution, print_every, dir_beam, freq_be
                   timesteps=temporal_resolution,
                   print_every=print_every,
                   gifpath=gifpath)
+
+    process = psutil.Process()
+    print(process.memory_info().vms)
 
     return max_disruption
