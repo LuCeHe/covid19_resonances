@@ -35,7 +35,6 @@ def getProteinConstants(pdb_name='toy'):
         # 60 n_atoms -> 112s
         n_atoms = int(pdb_name.replace('toy', ''))
 
-        print(n_atoms)
         y_0 = np.concatenate(
             [np.zeros(3 * n_atoms), np.random.rand(3 * n_atoms)])  # initial velocities followed by initial positions
         y_0 = np.concatenate(
