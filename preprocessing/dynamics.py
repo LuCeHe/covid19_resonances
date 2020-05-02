@@ -1,5 +1,5 @@
 import numpy as np
-from numba import jit
+#from numba import jit
 
 def dynamical_protein(y, t, k, masses, friction, y_eq, charges, amplitude_1, amplitude_2, dir_beam, freq_beam_1, freq_beam_2):
     x_prime, x = np.split(np.array(y), 2)
@@ -24,7 +24,7 @@ def dynamical_protein(y, t, k, masses, friction, y_eq, charges, amplitude_1, amp
     return dydt
 
 
-@jit
+#@jit
 def dynamical_protein_noXray(y, t, k, masses, friction):
     x_prime, x = np.split(np.array(y), 2)
 
