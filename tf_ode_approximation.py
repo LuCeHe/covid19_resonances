@@ -3,17 +3,17 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-
-import deepxde as dde
-import numpy as np
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
+tf.logging.set_verbosity(tf.logging.ERROR)  # or any {DEBUG, INFO, WARN, ERROR, FATAL}
+
+import deepxde.deepxde as dde
+import numpy as np
 
 from GenericTools.PlotTools.deepxde_modified import saveplot
 from GenericTools.SacredTools.VeryCustomSacred import CustomExperiment
-
-tf.logging.set_verbosity(tf.logging.FATAL)  # or any {DEBUG, INFO, WARN, ERROR, FATAL}
-
-from covid19_resonances.preprocessing.preprocessing import getData
+from covid19_resonances.preprocessing.dynamics import proteinODE
+from covid19_resonances.preprocessing.protein_constants import getProteinConstants
 
 CDIR = os.path.dirname(os.path.realpath(__file__))
 ex = CustomExperiment('tf covid19 resonances', base_dir=CDIR, GPU=1)
@@ -22,72 +22,76 @@ ex = CustomExperiment('tf covid19 resonances', base_dir=CDIR, GPU=1)
 @ex.config
 def cfg():
     epochs = 1  # 20000
-    freq_beam = 20
+
+    n_atoms = np.random.choice(range(3, 8))
+    pdb_name = 'toy{}'.format(n_atoms)  # '6lu7'  # '6M03'
+    stoptime = 20
+    temporal_resolution = 2000  # 200
+    print_every = int(temporal_resolution / 20)
+
+    # beam properties
+    freq_beam_1 = 2000 * np.random.rand()
+    freq_beam_2 = 2000 * np.random.rand()
+    freq_beam_2 = np.random.choice([freq_beam_2, freq_beam_1])
+
     dir_beam = np.random.rand(3)
-    dir_beam = dir_beam / np.linalg.norm(dir_beam)
+    amplitude_1 = np.array([1, 2, 2])
+    amplitude_2 = np.cross(dir_beam, amplitude_1)
+    amplitude_2 = amplitude_2 / np.linalg.norm(amplitude_2) * np.linalg.norm(amplitude_1) * .2
+
+    amplitude_1 = np.repeat(amplitude_1[:, np.newaxis], n_atoms, axis=1).T.flatten()
+    amplitude_2 = np.repeat(amplitude_2[:, np.newaxis], n_atoms, axis=1).T.flatten()
+    amplitude_2 = np.random.choice([0, amplitude_1, amplitude_2])
+
+    seed = np.random.choice(2000)
 
 
 @ex.automain
-def main(epochs, dir_beam, freq_beam, _log):
-    y_0, y_eq, masses, friction, k, amplitude, charges = getData(pdb_name='toy')
+def main(epochs, n_atoms, pdb_name, stoptime, temporal_resolution, print_every, freq_beam_1, freq_beam_2, dir_beam,
+         amplitude_1, amplitude_2, seed, _log):
+    y_0, y_eq, masses, friction, k, charges = getProteinConstants(pdb_name=pdb_name)
 
-    n_variables = len(masses)
-    n_atoms = int(n_variables/3)
-    print('n_variables: ', n_variables)
+    n_variables = 3 * n_atoms
+    print('number atoms: {}, number variables: {}'.format(n_atoms, 3 * n_atoms))
 
-    def ode_system(t, xpx):
-        """ODE system.
-        dy1/dx = y2
-        dy2/dx = -y1
-        """
-        x_prime, x = tf.split(xpx, 2, axis=1)
+    ode_system = proteinODE(y_0, y_eq, masses, friction, k, freq_beam_1, freq_beam_2, dir_beam, charges, amplitude_1,
+                            amplitude_2)
 
-        first_derivative = x_prime
-        x_repeated = tf.repeat(x[:, tf.newaxis], x.shape[1], axis=1)
-        diffs_x = x_repeated - tf.transpose(x_repeated, perm=[0, 2, 1])
-
-        # compute absolute position to calculate the influence of the xray
-        positions = x + y_eq
-        a = tf.transpose(tf.repeat(positions[:, :, tf.newaxis], 3, axis=2), [0, 2, 1])
-        absolute_positions = tf.concat(a, axis=1)
-        xrays_beam = charges * amplitude * tf.sin(tf.reduce_sum(dir_beam[tf.newaxis, :, tf.newaxis] * absolute_positions, axis=1) + freq_beam * t)
-
-        # compute differences in distances for spring model
-        diffs_x = tf.cast(diffs_x, dtype=tf.float64)
-        k_diff = tf.math.multiply(k, diffs_x)
-        k_diff = tf.cast(k_diff, dtype=tf.float32)
-
-        second_derivative = (- friction * x_prime - tf.reduce_sum(k_diff, axis=1) + xrays_beam) / masses
-
-        dx_t = tf.gradients(x, t)[0]
-        dx_tt = tf.gradients(x_prime, t)[0]
-        concatenation = tf.concat([dx_t - first_derivative, dx_tt - second_derivative], axis=1)
-        list_eqs = tf.split(concatenation, xpx.shape[1], axis=1)
-        # print(concatenation)
-        return list_eqs
-
+    """
     def boundary(_, on_initial):
         return on_initial
 
-    def func(x):
-        """
-        y1 = sin(x)
-        y2 = cos(x)
-        """
-        return np.hstack((np.sin(x),) * 2 * n_variables)
-
     geom = dde.geometry.TimeDomain(0, 10)
-    ic_list = [dde.IC(geom, np.sin, boundary, component=i) for i in range(n_variables)]
+    ic_list = [dde.IC(geom, lambda X: np.zeros(X.shape), boundary, component=i) for i in range(n_variables)]
+
     # ic2 = dde.IC(geom, np.cos, boundary, component=1)
     data = dde.data.PDE(
-        geom=geom,
-        num_outputs=2 * n_variables,
+        geometry=geom,
         pde=ode_system,
         bcs=ic_list,
-        num_domain=35,
-        num_boundary=2 * n_variables,
-        func=func,
-        num_test=100)
+        num_domain=10,
+        num_boundary=10,
+        train_distribution='random',
+        solution=None,
+        num_test=None)
+    """
+
+    #geom = dde.geometry.Interval(-1, 1)
+    timedomain = dde.geometry.TimeDomain(0, 10)
+    geomtime = timedomain #dde.geometry.GeometryXTime(geom, timedomain)
+
+    bc = [dde.DirichletBC(geom=geomtime,
+                          func=lambda x: np.zeros((x.shape[0],1)),
+                          on_boundary=lambda _, on_boundary: on_boundary,
+                          component=i) for i in range(2*n_variables)]
+    ic = [dde.IC(geom=geomtime,
+                 func=lambda x: np.zeros(x.shape),
+                 on_initial=lambda _, on_initial: on_initial,
+                 component=i + n_variables) for i in range(2*n_variables)]
+
+    data = dde.data.TimePDE(
+        geometryxtime=geomtime, pde=ode_system, ic_bcs=ic+bc, num_domain=300, num_boundary=80, num_initial=160
+    )
 
     layer_size = [1] + [50] * 3 + [2 * n_variables]
     activation = "tanh"
@@ -98,6 +102,6 @@ def main(epochs, dir_beam, freq_beam, _log):
     model.compile("adam", lr=0.001, metrics=["l2 relative error"])
     losshistory, train_state = model.train(epochs=epochs)
 
-    plotspath = os.path.join(*[CDIR, ex.observers[0].basedir, r'images/'])
-    outputspath = os.path.join(*[CDIR, ex.observers[0].basedir, r'other_outputs/'])
+    plotspath = os.path.join(*[CDIR, ex.observers[0].basedir, 'images'])
+    outputspath = os.path.join(*[CDIR, ex.observers[0].basedir, 'other_outputs'])
     saveplot(losshistory, train_state, issave=True, isplot=True, plotspath=plotspath, outputspath=outputspath)

@@ -23,7 +23,6 @@ ex = CustomExperiment('noi', base_dir=CDIR, GPU=1)
 
 @ex.config
 def cfg():
-    # this code took 6h for n_atoms = 7600
     n_atoms = np.random.choice(range(3, 8))
     pdb_name = 'toy{}'.format(n_atoms)  # '6lu7'  # '6M03'
     stoptime = 20
