@@ -11,7 +11,7 @@ import deepxde.deepxde as dde
 import numpy as np
 
 from GenericTools.PlotTools.deepxde_modified import saveplot
-from GenericTools.SacredTools.VeryCustomSacred import CustomExperiment
+from GenericTools.StayOrganizedTools.VeryCustomSacred import CustomExperiment
 from covid19_resonances.preprocessing.dynamics import proteinODE
 from covid19_resonances.preprocessing.protein_constants import getProteinConstants
 

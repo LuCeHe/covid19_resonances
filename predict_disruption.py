@@ -4,7 +4,7 @@ from GenericTools.KerasTools.convenience_tools import plot_history
 from covid19_resonances.neural_models.neural_models import MemN2N_model
 from covid19_resonances.preprocessing.data_generator import DataGenerator
 
-from GenericTools.SacredTools.VeryCustomSacred import CustomExperiment
+from GenericTools.StayOrganizedTools.VeryCustomSacred import CustomExperiment
 
 CDIR = os.path.dirname(os.path.realpath(__file__))
 ex = CustomExperiment('pd', base_dir=CDIR, GPU=1)

@@ -8,7 +8,7 @@ predict the disruption of a protein given it's constants and the frequency of EM
 import os, json, h5py
 import numpy as np
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from GenericTools.SacredTools.VeryCustomSacred import CustomExperiment
+from GenericTools.StayOrganizedTools.VeryCustomSacred import CustomExperiment
 
 CDIR = os.path.dirname(os.path.realpath(__file__))
 ex = CustomExperiment('cnd', base_dir=CDIR, GPU=1)

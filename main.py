@@ -1,5 +1,5 @@
 import os
-from GenericTools.SacredTools.VeryCustomSacred import CustomExperiment
+from GenericTools.StayOrganizedTools.VeryCustomSacred import CustomExperiment
 from ariel_tests.interpolations import timeStructured
 
 CDIR = os.path.dirname(os.path.realpath(__file__))

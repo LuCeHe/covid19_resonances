@@ -7,12 +7,11 @@ files are PDB files where the occupancy and B-factor columns have
 been replaced by per-atom charge and radius.
 2. get the expected springs
 """
-import os
 import psutil
 from pylab import *
 from scipy.integrate import odeint
 
-from GenericTools.SacredTools.VeryCustomSacred import CustomExperiment
+from GenericTools.StayOrganizedTools.VeryCustomSacred import CustomExperiment
 from covid19_resonances.preprocessing.dynamics import dynamical_protein
 from covid19_resonances.preprocessing.protein_constants import getProteinConstants
 from covid19_resonances.postprocessing.visualization import positions2gif
